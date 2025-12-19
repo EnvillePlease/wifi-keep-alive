@@ -82,7 +82,7 @@ create_service_user() {
         print_info "Creating system user '$username'..."
         # Create system user: no home, no login shell, with matching group
         useradd --system --shell /usr/sbin/nologin --no-create-home \
-                --group --comment "WiFi Keep-Alive Service User" "$username" 2>/dev/null \
+                --user-group --comment "WiFi Keep-Alive Service User" "$username" \
             || { print_error "Failed to create user '$username'"; exit 1; }
         print_success "User '$username' created"
     fi
