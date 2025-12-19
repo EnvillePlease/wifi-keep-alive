@@ -239,24 +239,47 @@ Common issues:
 
 ### WiFi Still Disconnecting
 
-If WiFi still disconnects, you may also need to disable power management at the driver level:
+If WiFi still disconnects, you may also need to disable power management at the driver level. On Raspberry Pi OS Bookworm and later, use NetworkManager (nmcli):
 
 ```bash
 # Check current power management status
 iwconfig wlan0 | grep "Power Management"
 
-# Disable power management (temporary)
-sudo iwconfig wlan0 power off
+# Method 1: Using NetworkManager (recommended for Bookworm+)
+# List your WiFi connection name
+nmcli connection show
 
-# Make permanent (add to /etc/rc.local or create a systemd service)
+# Disable power saving for your WiFi connection (replace "preconfigured" with your connection name)
+sudo nmcli connection modify "preconfigured" 802-11-wireless.powersave 2
+
+# Apply changes
+sudo nmcli connection up "preconfigured"
+
+# Method 2: Using iw command (temporary, resets on reboot)
+sudo iw dev wlan0 set power_save off
+
+# Method 3: Create a NetworkManager dispatcher script (persistent)
+sudo tee /etc/NetworkManager/dispatcher.d/99-wifi-powersave-off << 'EOF'
+#!/bin/bash
+if [ "$1" = "wlan0" ] && [ "$2" = "up" ]; then
+    /usr/sbin/iw dev wlan0 set power_save off
+fi
+EOF
+sudo chmod +x /etc/NetworkManager/dispatcher.d/99-wifi-powersave-off
 ```
+
+**NetworkManager powersave values:**
+- `0` = Use default
+- `1` = Ignore (don't touch power saving)
+- `2` = Disable power saving
+- `3` = Enable power saving
 
 ## How It Works
 
 1. The script runs in an infinite loop
-2. Every `interval` seconds, it sends 4 ICMP ping packets to the target host
+2. Every `interval` seconds, it sends a single ICMP ping packet to the target host
 3. The ping activity keeps the WiFi adapter active
-4. If a ping fails, it logs the failure but continues running
+4. If a ping fails, it logs the failure with a timestamp but continues running
 5. Press `Ctrl+C` to stop gracefully
 
 ## License
