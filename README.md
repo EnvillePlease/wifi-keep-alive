@@ -289,8 +289,3 @@ MIT License - See [LICENSE](LICENSE) for details.
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
-
-## Related Projects
-
-- [Network Manager](https://networkmanager.dev/) - Full network management solution
-- [wavemon](https://github.com/uoaerg/wavemon) - Wireless network monitor
