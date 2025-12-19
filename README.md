@@ -28,6 +28,8 @@ WiFi Keep-Alive sends regular ICMP ping requests to a specified network device (
 - ✅ **Cross-platform** - Works on Linux, macOS, and Windows
 - ✅ **Lightweight** - Minimal CPU and memory footprint
 - ✅ **Configurable** - Adjustable ping interval
+- ✅ **Timeout protection** - Pings won't hang on unreachable hosts
+- ✅ **Timestamped output** - Easy log analysis with timestamps
 - ✅ **Systemd ready** - Includes installer for running as a service
 
 ## Requirements
@@ -91,9 +93,10 @@ python3 wifi-keep-alive.py --help
 ```
 Starting keep-alive pings to 192.168.1.1 every 60 seconds...
 Press Ctrl+C to stop.
-Ping to 192.168.1.1: OK
-Ping to 192.168.1.1: OK
-Ping to 192.168.1.1: OK
+
+[2025-12-19 10:30:00] Ping to 192.168.1.1: OK
+[2025-12-19 10:31:00] Ping to 192.168.1.1: OK
+[2025-12-19 10:32:00] Ping to 192.168.1.1: OK
 ^C
 Stopped.
 ```
